@@ -1,24 +1,52 @@
 // ❗ You don't need to add extra reducers to achieve MVP
 import { combineReducers } from 'redux'
+import { MOVE_COUNTERCLOCKWISE, MOVE_CLOCKWISE, SET_QUIZ_INTO_STATE, SET_SELECTED_ANSWER, SET_INFO_MESSAGE, INPUT_CHANGE, RESET_FORM } from './action-types';
 
 const initialWheelState = 0
 function wheel(state = initialWheelState, action) {
-  return state
+  switch (action.type) {
+    case (MOVE_COUNTERCLOCKWISE):
+      if (--state < 0) return 5;
+      return state--
+
+    case (MOVE_CLOCKWISE):
+      if (++state > 5) return 0;
+      return state++
+
+    default:
+      return state;
+
+  }
 }
 
 const initialQuizState = null
-function quiz(state = initialQuizState, action) {
-  return state
+const quiz = (state = initialQuizState, action) => {
+  switch (action.type) {
+    case SET_QUIZ_INTO_STATE:
+      return action.payload
+    default:
+      return state
+  }
 }
 
 const initialSelectedAnswerState = null
-function selectedAnswer(state = initialSelectedAnswerState, action) {
-  return state
+const selectedAnswer = (state = initialSelectedAnswerState, action) => {
+  switch (action.type) {
+    case SET_SELECTED_ANSWER:
+      return action.payload
+    default:
+      return state
+  }
 }
 
 const initialMessageState = ''
 function infoMessage(state = initialMessageState, action) {
-  return state
+  switch (action.type) {
+    case SET_INFO_MESSAGE:
+      return action.payload
+    default:
+      return state
+  }
 }
 
 const initialFormState = {
@@ -27,7 +55,39 @@ const initialFormState = {
   newFalseAnswer: '',
 }
 function form(state = initialFormState, action) {
-  return state
+  switch (action.type) {
+    case INPUT_CHANGE:
+      return {
+        ...state,
+        [action.payload.id]: action.payload.value /** Added Trim here */
+      }
+    case RESET_FORM:
+      return initialFormState //Reviewed With Chris
+    default:
+      return state
+  }
 }
 
 export default combineReducers({ wheel, quiz, selectedAnswer, infoMessage, form })
+
+
+// [1, 2, 3, 4]
+// const TestArr = [
+//   {
+//     name: 'Lionel',
+//     age: 65,
+//     gender: 'Male'
+//   },
+//   {
+//     name: 'Toya',
+//     age: 40,
+//     gender: 'Female'
+//   },
+//   {
+//     name: 'Stark',
+//     age: 30,
+//     gender: 'Male'
+//   }
+// ]
+
+// const newArr = TestArr.map((person) => ({[person.gender]: person.name }))
